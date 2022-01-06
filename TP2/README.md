@@ -30,7 +30,7 @@ votre switch.*
 
 Infrastructure Eve-ng : 
 
-![](img/topo_eve.png)
+![](img/topo_eve.PNG)
 
 Fonctionnalités mises en place pour chaque interface : 
 * `switchport port-security` : Active le port security.
@@ -45,4 +45,4 @@ la CAM ou le « vol de port ».*
 
 Lorsqu'on exécute l'attaque, on remarque bien sur le switch détecte une anomalie et va empêcher le transfert des addresses mac malveillantes.
 
-![](img/port-security.png)
+![](img/port-security.PNG)
