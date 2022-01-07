@@ -121,13 +121,13 @@ conf t
 ip arp inspection vlan 1
 interface Ethernet0/0
 ip arp inspection trust
-end
+exit
 interface Ethernet0/1
 ip arp inspection trust
-end
+exit
 interface Ethernet0/2
 ip arp inspection trust
-end
+exit
 interface Ethernet1/0
 ip arp inspection trust
 end
