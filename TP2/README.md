@@ -23,6 +23,10 @@ Elle consiste en l'envoi d'une grande quantité de trames ethernet sur le même 
 
 * [Script python](scripts/port_stealing.py)
 
+![](img/port_stealing.PNG)
+
+Sur la mac table du switch, on remarque une nouvelle entrée. Notre attaquant (0/3) est référencé avec l'adresse mac de notre victime (Linux). Grâce à wireshark, on intercepte le traffic de la victime.
+
 **Mise en oeuvre de Port-Security**
 
 *- En vous aidant du tableau 1 en annexe, mettez en œuvre les fonctionnalités Port-Security sur
@@ -55,13 +59,15 @@ Lorsqu'on exécute l'attaque, on remarque bien que le switch détecte une anomal
 
 L'attaque consiste en l'intégration d'un serveur DHCP non autorisé sur un réseau, le but de ce serveur DHCP est de répondre en premier aux requêtes **DHCPDISCOVER** et ainsi introduire les équipements faisant ces demandes dans un réseau contrôlé par l'attaquant.
 
-*- Intégrez sur votre réseau local un serveur DHCP légitime offrant l’accès à internet. Mettez
-ensuite en œuvre l’attaque rogue DHCP sur votre réseau afin de récupérer tout le trafic des
-stations de travail vers le serveur DHCP malveillant.*
+*- Intégrez sur votre réseau local un serveur DHCP légitime offrant l’accès à internet. Mettez ensuite en œuvre l’attaque rogue DHCP sur votre réseau afin de récupérer tout le trafic des stations de travail vers le serveur DHCP malveillant.*
 
-Plage d'adresse IP du serveur DHCP légitime : de 172.16.1.150 à 172.16.1.155.
+**Topologie Eve-ng :**
 
-Plage d'adresse IP du serveur DHCP Rogue : de 172.16.1.170 à 172.16.1.190.
+![](img/eve-dhcp.PNG)
+
+> Plage d'adresse IP du serveur DHCP légitime : de 172.16.1.130 à 172.16.1.155.
+
+>Plage d'adresse IP du serveur DHCP Rogue : de 172.16.1.170 à 172.16.1.190.
 
 La linux 1 à pris une IP en DHCP du serveur DHCP légitime : 
 
