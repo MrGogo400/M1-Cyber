@@ -23,10 +23,6 @@ Elle consiste en l'envoi d'une grande quantité de trames ethernet sur le même 
 
 * [Script python](scripts/port_stealing.py)
 
-![](img/port_stealing.PNG)
-
-Sur la mac table du switch, on remarque une nouvelle entrée. Notre attaquant (0/3) est référencé avec l'adresse mac de notre victime (Linux). Grâce à wireshark, on intercepte le traffic de la victime.
-
 **Mise en oeuvre de Port-Security**
 
 *- En vous aidant du tableau 1 en annexe, mettez en œuvre les fonctionnalités Port-Security sur
@@ -43,13 +39,28 @@ Fonctionnalités mises en place pour chaque interface :
 
 > `switchport port-security mac address xx:xx` -> sécurisé et utile, mais avec évolution du SI, peut devenir problématique.
 
-
 *- Testez le bon fonctionnement de celle-ci, votre script ne doit plus permettre le débordement de
 la CAM ou le « vol de port ».*
 
-Lorsqu'on exécute l'attaque, on remarque bien que le switch détecte une anomalie et va empêcher le transfert des addresses mac malveillantes.
+**CAM flooding :**
+
+![](img/cam_flooding.PNG)
+
+> Lorsqu'on exécute l'attaque, on remarque sur le switch, que l'interface de l'attaquant est référencé des addresses mac différentes.
+
+**Port stealing :**
+
+![](img/port_stealing.PNG)
+
+> Sur la mac table du switch, on remarque une nouvelle entrée. Notre attaquant (0/3) est référencé avec l'adresse mac de notre victime (Linux). Grâce à wireshark, on intercepte le traffic de la victime.
+
+**Après activation du port security :**
 
 ![](img/port-security.PNG)
+
+![](img/port-security2.PNG)
+
+Lorsqu'on exécute l'attaque, on remarque bien que le switch détecte une anomalie et va empêcher le transfert des addresses mac malveillantes.
 
 ## 2. Mise en œuvre de la mesure de protection DHCP snooping :
 
@@ -90,12 +101,21 @@ Configuration switch :
 ```
 enable
 conf t
-ip dhcp snooping
-ip dhcp snooping vlan 1
 interface ethernet 1/0
 ip dhcp snooping trust
 exit
+interface ethernet 0/1
+no ip dhcp snooping trust
 exit
+interface ethernet 0/2
+no ip dhcp snooping trust
+exit
+interface ethernet 0/3
+no ip dhcp snooping trust
+exit
+ip dhcp snooping
+ip dhcp snooping vlan 1
+# ip dhcp snooping database unix:snoop.db
 exit
 ```
 
@@ -107,7 +127,9 @@ En activant le DHCP Snooping sur le switch et en précisant l'interface de notre
 
 ![](img/snooping_ok.PNG)
 
-> La machine récupère uniquement une IP du serveur DHCP légitime.
+> La machine récupère uniquement une IP du serveur DHCP légitime et sur le switch, on peut voir un message :
+
+![](img/dhcp_snooping_switch.PNG)
 
 ## 3. Mise en œuvre de la mesure de protection Dynamic ARP inspection :
 
@@ -136,9 +158,12 @@ ip arp inspection trust
 exit
 interface Ethernet1/0
 ip arp inspection trust
-end
+exit
+exit
 
 interface Ethernet0/3
+ip arp inspection trust
+exit
 !Interface de l'attaquant donc on ne la configure pas en mode en mode trust
 ```
 
@@ -160,13 +185,13 @@ Cette attaque consiste en la création de paquets IP ayant une adresse IP source
 
 *- En vous aidant des ressources fournies dans la rubrique « Aperçu du lab » ainsi que du tableau 4 en annexe, mettez en œuvre la fonctionnalité IP source guard sur votre switch.*
 
+![](img/ip_spoofing.PNG)
+
+**Configuration switch :**
+
 ```
 enable
 conf t
-in et0/0
-ip verify source
-ip verify source port-security
-exit
 in et0/1
 ip verify source
 ip verify source port-security
@@ -175,13 +200,19 @@ in et0/2
 ip verify source
 ip verify source port-security
 exit
+
+
 in et0/3
 ip verify source
 ip verify source port-security
 exit
-ip source binding 00.00.00 vlan 1 0.0.0.0 interface Et0/0
-ip source binding 00.00.00 vlan 1 0.0.0.0 interface Et0/1
-ip source binding 00.00.00 vlan 1 0.0.0.0 interface Et0/2
-ip source binding 00.00.00 vlan 1 0.0.0.0 interface Et0/3
-end
+in et1/0
+ip verify source
+ip verify source port-security
+exit
+no ip source binding 0050.0000.0100 vlan 1 172.16.1.133 interface Et0/1
+no ip source binding 0050.0000.0300 vlan 1 172.16.1.154 interface Et0/2
+no ip source binding 0050.0000.0500 vlan 1 172.16.1.100 interface Et1/0
+no ip source binding 0050.0000.0400 vlan 1 172.16.1.140 interface Et0/3
+exit
 ```
