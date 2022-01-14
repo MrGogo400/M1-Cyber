@@ -6,6 +6,8 @@ import subprocess
 import logging
 
 def parse_args():
+    """ Parse arguments
+    """
     parser = argparse.ArgumentParser(description='Process some integers.')
     parser.add_argument('-a', '--host', type=str, help='address of the host')
     parser.add_argument('-p', '--port', type=int, help='port')
@@ -79,7 +81,8 @@ def udp(args):
         raise
 
 def main():
-
+    """ 
+    """
     try:
         args = parse_args()
         logging.basicConfig(filename='log_server.log', level=logging.DEBUG)
