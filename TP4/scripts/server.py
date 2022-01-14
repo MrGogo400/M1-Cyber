@@ -1,6 +1,5 @@
 #!/bin/python3
 
-from pydoc import cli
 import socket
 import argparse
 import subprocess
