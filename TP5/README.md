@@ -207,3 +207,308 @@ no shut
 exit
 exit
 ```
+
+# Protection périmétrique, cloisonnement interne et MSTP
+
+## Mise en œuvre de la protection périmétrique
+
+- Installer un pfsense.
+
+> Photo
+
+## Mise en œuvre du cloisonnement
+
+SW1
+```
+enable
+conf t
+vlan 42
+name PROD
+exit
+vlan 41
+name BE
+exit
+vlan 44
+name RH
+exit
+vlan 45
+name DIR
+exit
+vlan 43
+name CPTA
+exit
+vlan 46
+name DSI
+exit
+vlan 100
+name SRV_TECH
+exit
+vlan 103
+name SRV_MGMT
+exit
+vlan 61
+name PRINT
+exit
+vlan 62
+name CAM
+exit
+vlan 63
+name VOIP
+exit
+vlan 101
+name SRV_COMM
+exit
+vlan 110
+name INVITES
+exit
+vlan 102
+name SRV_BE
+exit
+int port-channel 1
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
+exit
+int port-channel 5
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
+exit
+exit
+```
+
+SW2
+```
+enable
+conf t
+vlan 42
+name PROD
+exit
+vlan 41
+name BE
+exit
+vlan 44
+name RH
+exit
+vlan 45
+name DIR
+exit
+vlan 43
+name CPTA
+exit
+vlan 46
+name DSI
+exit
+vlan 100
+name SRV_TECH
+exit
+vlan 103
+name SRV_MGMT
+exit
+vlan 61
+name PRINT
+exit
+vlan 62
+name CAM
+exit
+vlan 63
+name VOIP
+exit
+vlan 101
+name SRV_COMM
+exit
+vlan 110
+name INVITES
+exit
+vlan 102
+name SRV_BE
+exit
+int port-channel 1
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
+exit
+int port-channel 2
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
+exit
+exit
+```
+
+SW3
+```
+enable
+conf t
+vlan 42
+name PROD
+exit
+vlan 41
+name BE
+exit
+vlan 44
+name RH
+exit
+vlan 45
+name DIR
+exit
+vlan 43
+name CPTA
+exit
+vlan 46
+name DSI
+exit
+vlan 100
+name SRV_TECH
+exit
+vlan 103
+name SRV_MGMT
+exit
+vlan 61
+name PRINT
+exit
+vlan 62
+name CAM
+exit
+vlan 63
+name VOIP
+exit
+vlan 101
+name SRV_COMM
+exit
+vlan 110
+name INVITES
+exit
+vlan 102
+name SRV_BE
+exit
+int port-channel 2
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
+exit
+int port-channel 3
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
+exit
+exit
+```
+
+SW4
+```
+enable
+conf t
+vlan 42
+name PROD
+exit
+vlan 41
+name BE
+exit
+vlan 44
+name RH
+exit
+vlan 45
+name DIR
+exit
+vlan 43
+name CPTA
+exit
+vlan 46
+name DSI
+exit
+vlan 100
+name SRV_TECH
+exit
+vlan 103
+name SRV_MGMT
+exit
+vlan 61
+name PRINT
+exit
+vlan 62
+name CAM
+exit
+vlan 63
+name VOIP
+exit
+vlan 101
+name SRV_COMM
+exit
+vlan 110
+name INVITES
+exit
+vlan 102
+name SRV_BE
+exit
+int port-channel 3
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
+exit
+int port-channel 4
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
+exit
+exit
+```
+
+SW5
+```
+enable
+conf t
+vlan 42
+name PROD
+exit
+vlan 41
+name BE
+exit
+vlan 44
+name RH
+exit
+vlan 45
+name DIR
+exit
+vlan 43
+name CPTA
+exit
+vlan 46
+name DSI
+exit
+vlan 100
+name SRV_TECH
+exit
+vlan 103
+name SRV_MGMT
+exit
+vlan 61
+name PRINT
+exit
+vlan 62
+name CAM
+exit
+vlan 63
+name VOIP
+exit
+vlan 101
+name SRV_COMM
+exit
+vlan 110
+name INVITES
+exit
+vlan 102
+name SRV_BE
+exit
+int port-channel 4
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
+exit
+int port-channel 5
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
+exit
+exit
+```
