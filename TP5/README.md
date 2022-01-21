@@ -267,12 +267,21 @@ exit
 int port-channel 1
 switchport trunk encapsulation dot1q
 switchport mode trunk
-switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
+switchport trunk allowed vlan add 41,42,43,44,45,46,61,62,63,100,101,102,103,110
 exit
 int port-channel 5
 switchport trunk encapsulation dot1q
 switchport mode trunk
-switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
+switchport trunk allowed vlan add 41,42,43,44,45,46,61,62,63,100,101,102,103,110
+exit
+int e1/1
+switchport mode access
+switchport access vlan 61
+exit
+int e0/0
+switchport trunk encapsulation dot1q
+switchport mode trunk
+switchport trunk allowed vlan add 41,42,43,44,45,46,61,62,63,100,101,102,103,110
 exit
 exit
 ```
@@ -326,12 +335,16 @@ exit
 int port-channel 1
 switchport trunk encapsulation dot1q
 switchport mode trunk
-switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
+switchport trunk allowed vlan add 41,42,43,44,45,46,61,62,63,100,101,102,103,110
 exit
 int port-channel 2
 switchport trunk encapsulation dot1q
 switchport mode trunk
-switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
+switchport trunk allowed vlan add 41,42,43,44,45,46,61,62,63,100,101,102,103,110
+exit
+int e1/1
+switchport mode access
+switchport access vlan 61
 exit
 exit
 ```
@@ -385,12 +398,12 @@ exit
 int port-channel 2
 switchport trunk encapsulation dot1q
 switchport mode trunk
-switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
+switchport trunk allowed vlan add 41,42,43,44,45,46,61,62,63,100,101,102,103,110
 exit
 int port-channel 3
 switchport trunk encapsulation dot1q
 switchport mode trunk
-switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
+switchport trunk allowed vlan add 41,42,43,44,45,46,61,62,63,100,101,102,103,110
 exit
 exit
 ```
@@ -444,12 +457,12 @@ exit
 int port-channel 3
 switchport trunk encapsulation dot1q
 switchport mode trunk
-switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
+switchport trunk allowed vlan add 41,42,43,44,45,46,61,62,63,100,101,102,103,110
 exit
 int port-channel 4
 switchport trunk encapsulation dot1q
 switchport mode trunk
-switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
+switchport trunk allowed vlan add 41,42,43,44,45,46,61,62,63,100,101,102,103,110
 exit
 exit
 ```
@@ -503,12 +516,16 @@ exit
 int port-channel 4
 switchport trunk encapsulation dot1q
 switchport mode trunk
-switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
+switchport trunk allowed vlan add 41,42,43,44,45,46,61,62,63,100,101,102,103,110
 exit
 int port-channel 5
 switchport trunk encapsulation dot1q
 switchport mode trunk
-switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
+switchport trunk allowed vlan add 41,42,43,44,45,46,61,62,63,100,101,102,103,110
+exit
+int e1/0
+switchport mode access
+switchport access vlan 62
 exit
 exit
-```
+```  
