@@ -73,442 +73,84 @@ L'intérêt d'agréger des liens réseau et de pouvoir redonder les connexions e
 
 ![](img/gif.gif)
 
-SW1
-```
-enable
-conf t
-interface et0/1
-channel-protocol lacp
-channel-group 1 mode active
-no shut
-exit
-interface et0/3
-channel-protocol lacp
-channel-group 1 mode active
-no shut
-exit
-interface et1/0
-channel-protocol lacp
-channel-group 5 mode active
-no shut
-exit
-interface et0/2
-channel-protocol lacp
-channel-group 5 mode active
-no shut
-exit
-exit
-```
-
-SW2
-```
-enable
-conf t
-interface et0/0
-channel-protocol lacp
-channel-group 1 mode active
-no shut
-exit
-interface et0/3
-channel-protocol lacp
-channel-group 1 mode active
-no shut
-exit
-interface et0/1
-channel-protocol lacp
-channel-group 2 mode active
-no shut
-exit
-interface et1/0
-channel-protocol lacp
-channel-group 2 mode active
-no shut
-exit
-exit
-```
-
-SW3
-```
-enable
-conf t
-interface et0/2
-channel-protocol lacp
-channel-group 2 mode active
-no shut
-exit
-interface et0/0
-channel-protocol lacp
-channel-group 2 mode active
-no shut
-exit
-interface et0/3
-channel-protocol lacp
-channel-group 3 mode active
-no shut
-exit
-interface et0/1
-channel-protocol lacp
-channel-group 3 mode active
-no shut
-exit
-exit
-```
-
-SW4
-```
-enable
-conf t
-interface et0/3
-channel-protocol lacp
-channel-group 3 mode active
-no shut
-exit
-interface et0/0
-channel-protocol lacp
-channel-group 3 mode active
-no shut
-exit
-interface et1/0
-channel-protocol lacp
-channel-group 4 mode active
-no shut
-exit
-interface et0/1
-channel-protocol lacp
-channel-group 4 mode active
-no shut
-exit
-exit
-```
-
-SW5
-```
-enable
-conf t
-interface et0/2
-channel-protocol lacp
-channel-group 4 mode active
-no shut
-exit
-interface et0/0
-channel-protocol lacp
-channel-group 4 mode active
-no shut
-exit
-interface et0/3
-channel-protocol lacp
-channel-group 5 mode active
-no shut
-exit
-interface et0/1
-channel-protocol lacp
-channel-group 5 mode active
-no shut
-exit
-exit
-```
-
 # Protection périmétrique, cloisonnement interne et MSTP
 
 ## Mise en œuvre de la protection périmétrique
 
 - Installer un pfsense.
 
-> Photo
+![](img/topo_pfsense.PNG)
+
+> Le traffic entrant est interdit.
+
+![](img/block_wan_in.png)
 
 ## Mise en œuvre du cloisonnement
 
-SW1
+- Mise en place de la [configuration](conf/vlan.txt) suivante.
+
+## Paramétrage du filtrage inter-vlans
+
+- Mise en place de règles de filtrage sur le pare-feu (via document fourni).
+
+- Tester le fonctionnement avec l'outil de diagnostique que la connexion entre les deux machines est établie.
+
+![](img/script_inter_vlan.PNG)
+
+> La connexion s'est bien effectuée.
+
+## Activation du MSTP
+
 ```
 enable
 conf t
-vlan 42
-name PROD
+spanning-tree mst configuration
+instance 1 vlan 46, 100, 103, 110
+instance 2 vlan 41, 42, 43, 62, 101
+instance 3 vlan 44, 45, 61, 63, 102
 exit
-vlan 41
-name BE
-exit
-vlan 44
-name RH
-exit
-vlan 45
-name DIR
-exit
-vlan 43
-name CPTA
-exit
-vlan 46
-name DSI
-exit
-vlan 100
-name SRV_TECH
-exit
-vlan 103
-name SRV_MGMT
-exit
-vlan 61
-name PRINT
-exit
-vlan 62
-name CAM
-exit
-vlan 63
-name VOIP
-exit
-vlan 101
-name SRV_COMM
-exit
-vlan 110
-name INVITES
-exit
-vlan 102
-name SRV_BE
-exit
-int port-channel 1
-switchport trunk encapsulation dot1q
-switchport mode trunk
-switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
-exit
-int port-channel 5
-switchport trunk encapsulation dot1q
-switchport mode trunk
-switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
-exit
+spanning-tree mode mst
 exit
 ```
 
-SW2
-```
-enable
-conf t
-vlan 42
-name PROD
-exit
-vlan 41
-name BE
-exit
-vlan 44
-name RH
-exit
-vlan 45
-name DIR
-exit
-vlan 43
-name CPTA
-exit
-vlan 46
-name DSI
-exit
-vlan 100
-name SRV_TECH
-exit
-vlan 103
-name SRV_MGMT
-exit
-vlan 61
-name PRINT
-exit
-vlan 62
-name CAM
-exit
-vlan 63
-name VOIP
-exit
-vlan 101
-name SRV_COMM
-exit
-vlan 110
-name INVITES
-exit
-vlan 102
-name SRV_BE
-exit
-int port-channel 1
-switchport trunk encapsulation dot1q
-switchport mode trunk
-switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
-exit
-int port-channel 2
-switchport trunk encapsulation dot1q
-switchport mode trunk
-switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
-exit
-exit
-```
+Sur SW1: 
 
-SW3
-```
-enable
-conf t
-vlan 42
-name PROD
-exit
-vlan 41
-name BE
-exit
-vlan 44
-name RH
-exit
-vlan 45
-name DIR
-exit
-vlan 43
-name CPTA
-exit
-vlan 46
-name DSI
-exit
-vlan 100
-name SRV_TECH
-exit
-vlan 103
-name SRV_MGMT
-exit
-vlan 61
-name PRINT
-exit
-vlan 62
-name CAM
-exit
-vlan 63
-name VOIP
-exit
-vlan 101
-name SRV_COMM
-exit
-vlan 110
-name INVITES
-exit
-vlan 102
-name SRV_BE
-exit
-int port-channel 2
-switchport trunk encapsulation dot1q
-switchport mode trunk
-switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
-exit
-int port-channel 3
-switchport trunk encapsulation dot1q
-switchport mode trunk
-switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
-exit
-exit
-```
+![](img/mst_show.PNG)
 
-SW4
-```
-enable
-conf t
-vlan 42
-name PROD
-exit
-vlan 41
-name BE
-exit
-vlan 44
-name RH
-exit
-vlan 45
-name DIR
-exit
-vlan 43
-name CPTA
-exit
-vlan 46
-name DSI
-exit
-vlan 100
-name SRV_TECH
-exit
-vlan 103
-name SRV_MGMT
-exit
-vlan 61
-name PRINT
-exit
-vlan 62
-name CAM
-exit
-vlan 63
-name VOIP
-exit
-vlan 101
-name SRV_COMM
-exit
-vlan 110
-name INVITES
-exit
-vlan 102
-name SRV_BE
-exit
-int port-channel 3
-switchport trunk encapsulation dot1q
-switchport mode trunk
-switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
-exit
-int port-channel 4
-switchport trunk encapsulation dot1q
-switchport mode trunk
-switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
-exit
-exit
-```
+Si on coupe un lien, on remarque que l'outil de diagnostique fontionne toujours et notre MSTP aussi :
 
-SW5
-```
-enable
-conf t
-vlan 42
-name PROD
-exit
-vlan 41
-name BE
-exit
-vlan 44
-name RH
-exit
-vlan 45
-name DIR
-exit
-vlan 43
-name CPTA
-exit
-vlan 46
-name DSI
-exit
-vlan 100
-name SRV_TECH
-exit
-vlan 103
-name SRV_MGMT
-exit
-vlan 61
-name PRINT
-exit
-vlan 62
-name CAM
-exit
-vlan 63
-name VOIP
-exit
-vlan 101
-name SRV_COMM
-exit
-vlan 110
-name INVITES
-exit
-vlan 102
-name SRV_BE
-exit
-int port-channel 4
-switchport trunk encapsulation dot1q
-switchport mode trunk
-switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
-exit
-int port-channel 5
-switchport trunk encapsulation dot1q
-switchport mode trunk
-switchport trunk allowed vlan add 41,42,43,44,45,61,62,63,100,101,102,103,110
-exit
-exit
-```
+![](img/mstp_ok.PNG)
+
+# Publication de services sur internet, DMZ et VRRP
+
+## Mise en œuvre du cluster interne pour le filtrage intervlan 
+
+pfsense1: 172.16.1.132
+pfsense2: 172.16.1.135
+pfsense logique : 172.16.1.140
+debian1 : 172.16.1.134
+debian2 : 172.16.1.133
+
+![](img/topo_cluster.PNG)
+
+* installez un second firewall pfsense : ok.
+* activez les fonctionnalités CARP5 sur les deux Pfense afin de les monter en cluster.
+
+Sur le pfsense 1 (master) :
+
+![](img/master_pfsense.PNG)
+
+Sur le pfsense 2 (slave) :
+
+![](img/backup_pfsense.PNG)
+
+
+> Si on éteint un des deux pfsenses, le deuxième prend le relais.
+
+![](img/pfsense_master_down.PNG)
+
+## Mise en œuvre du cluster de firewalls périmétriques
+
+* installez deux serveurs Linux Debian partageant la même adresse IP via VRRP.
+
+![](img/topo_final.PNG)

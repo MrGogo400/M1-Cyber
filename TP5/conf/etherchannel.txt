@@ -1,0 +1,134 @@
+SW1
+```
+enable
+conf t
+interface et0/1
+channel-protocol lacp
+channel-group 1 mode active
+no shut
+exit
+interface et0/3
+channel-protocol lacp
+channel-group 1 mode active
+no shut
+exit
+interface et1/0
+channel-protocol lacp
+channel-group 5 mode active
+no shut
+exit
+interface et0/2
+channel-protocol lacp
+channel-group 5 mode active
+no shut
+exit
+exit
+```
+
+SW2
+```
+enable
+conf t
+interface et0/0
+channel-protocol lacp
+channel-group 1 mode active
+no shut
+exit
+interface et0/3
+channel-protocol lacp
+channel-group 1 mode active
+no shut
+exit
+interface et0/1
+channel-protocol lacp
+channel-group 2 mode active
+no shut
+exit
+interface et1/0
+channel-protocol lacp
+channel-group 2 mode active
+no shut
+exit
+exit
+```
+
+SW3
+```
+enable
+conf t
+interface et0/2
+channel-protocol lacp
+channel-group 2 mode active
+no shut
+exit
+interface et0/0
+channel-protocol lacp
+channel-group 2 mode active
+no shut
+exit
+interface et0/3
+channel-protocol lacp
+channel-group 3 mode active
+no shut
+exit
+interface et0/1
+channel-protocol lacp
+channel-group 3 mode active
+no shut
+exit
+exit
+```
+
+SW4
+```
+enable
+conf t
+interface et0/3
+channel-protocol lacp
+channel-group 3 mode active
+no shut
+exit
+interface et0/0
+channel-protocol lacp
+channel-group 3 mode active
+no shut
+exit
+interface et1/0
+channel-protocol lacp
+channel-group 4 mode active
+no shut
+exit
+interface et0/1
+channel-protocol lacp
+channel-group 4 mode active
+no shut
+exit
+exit
+```
+
+SW5
+```
+enable
+conf t
+interface et0/2
+channel-protocol lacp
+channel-group 4 mode active
+no shut
+exit
+interface et0/0
+channel-protocol lacp
+channel-group 4 mode active
+no shut
+exit
+interface et0/3
+channel-protocol lacp
+channel-group 5 mode active
+no shut
+exit
+interface et0/1
+channel-protocol lacp
+channel-group 5 mode active
+no shut
+exit
+exit
+```
