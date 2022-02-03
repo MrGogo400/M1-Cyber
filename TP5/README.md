@@ -87,7 +87,7 @@ L'intérêt d'agréger des liens réseau et de pouvoir redonder les connexions e
 
 ## Mise en œuvre du cloisonnement
 
-- Mise en place de la [configuration](conf/vlan.txt) suivante.
+- Mise en place des vlans.
 
 ## Paramétrage du filtrage inter-vlans
 
@@ -97,7 +97,7 @@ L'intérêt d'agréger des liens réseau et de pouvoir redonder les connexions e
 
 ![](img/script_inter_vlan.PNG)
 
-> La connexion s'est bien effectuée.
+> La connexion s'est bien effectuée entre deux machines du vlan 61 (PRINT) via l'outils de diagnostique python.
 
 ## Activation du MSTP
 
@@ -125,12 +125,6 @@ Si on coupe un lien, on remarque que l'outil de diagnostique fontionne toujours 
 
 ## Mise en œuvre du cluster interne pour le filtrage intervlan 
 
-pfsense1: 172.16.1.132
-pfsense2: 172.16.1.135
-pfsense logique : 172.16.1.140
-debian1 : 172.16.1.134
-debian2 : 172.16.1.133
-
 ![](img/topo_cluster.PNG)
 
 * installez un second firewall pfsense : ok.
@@ -151,6 +145,39 @@ Sur le pfsense 2 (slave) :
 
 ## Mise en œuvre du cluster de firewalls périmétriques
 
-* installez deux serveurs Linux Debian partageant la même adresse IP via VRRP.
+* Installez deux serveurs Linux Debian partageant la même adresse IP via VRRP.
 
 ![](img/topo_final.PNG)
+
+La debian1 est en **master** et la debian 2 en **backup** :
+
+![](img/debian_master.png)
+
+![](img/debian_backup.png)
+
+iptable :
+
+```
+
+sudo iptables -t filter -P INPUT DROP 
+sudo iptables -t filter -P FORWARD DROP 
+sudo iptables -t filter -P OUTPUT DROP
+
+sudo iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
+
+sudo iptables -I OUTPUT -p tcp -m tcp --dport 80 -j ACCEPT
+sudo iptables -I OUTPUT -p tcp -m tcp --dport 443 -j ACCEPT
+sudo iptables -I OUTPUT -p tcp -m tcp --dport 445 -j ACCEPT
+sudo iptables -I OUTPUT -p tcp -m tcp --dport 587 -j ACCEPT
+sudo iptables -I OUTPUT -p tcp -m tcp --dport 993 -j ACCEPT
+sudo iptables -I OUTPUT -p udp -m udp --dport 53 -j ACCEPT
+sudo iptables -I OUTPUT -p udp -m udp --dport 123 -j ACCEPT
+
+sudo iptables-save >/etc/sysconfig/iptables
+
+sudo service iptables restart
+```
+
+Si l'on éteint la debian1, la debian2 passe en status **Master** :
+
+![](img/debian_backuptomaster.png)
